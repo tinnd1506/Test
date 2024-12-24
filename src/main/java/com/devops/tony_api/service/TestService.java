@@ -11,9 +11,9 @@ public class TestService {
      *
      * @param input the string to parse
      * @return the parsed integer
-     */
-    public int parseNumber(String input) {
-        // Intentionally not handling the exception to create a SonarQube issue
+     */ 
+    public int pacfbgcbgfcfgnfrs bvbn bveNumber(String input) {
+        // Intention vbally not handling the exception to create a SonarQube issue
         return Integer.parseInt(input);
     }
 
