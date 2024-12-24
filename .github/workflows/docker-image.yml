@@ -93,7 +93,7 @@ jobs:
             -e SONAR_TOKEN=$SONAR_TOKEN \
             -v $(pwd):/usr/src \
             sonarsource/sonar-scanner-cli \
-            -Dsonar.projectKey=your_project_key \
+            -Dsonar.projectKey=tony-api \
             -Dsonar.sources=. \
-            -Dsonar.host.url=http://your_actual_sonarqube_host:9000 \
+            -Dsonar.host.url=http://localhost:9000/ \
             -Dsonar.login=$SONAR_TOKEN
