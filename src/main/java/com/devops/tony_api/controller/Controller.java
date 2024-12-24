@@ -25,7 +25,7 @@ public class Controller {
      * 
      * @return ResponseEntity containing the video model or an error message.
      */
-    @GetMapping("/tony")
+    @GetMapping("/getVideo")
     public ResponseEntity<?> getTonyVideo() {
         return handleRequest(() -> videoService.getTonyVideo());
     }
@@ -36,7 +36,7 @@ public class Controller {
      * @return ResponseEntity containing a list of video models for songs or an
      *         error message.
      */
-    @GetMapping("/songs")
+    @GetMapping("/getPlaylist")
     public ResponseEntity<?> getSongs() {
         return handleRequest(() -> videoService.getSongs());
     }
