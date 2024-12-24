@@ -24,6 +24,11 @@ jobs:
       - name: Build with Maven
         run: ./mvnw package
 
+      - name: Debug Image Name and Version
+        run: |
+          echo "Image Name: $IMAGE_NAME"
+          echo "Semantic Version: $SEMANTIC_VERSION"
+
       - name: Build and Push Docker Image to GHCR
         env:
           REGISTRY: ghcr.io
