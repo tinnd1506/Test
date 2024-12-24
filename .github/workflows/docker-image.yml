@@ -95,5 +95,5 @@ jobs:
             sonarsource/sonar-scanner-cli \
             -Dsonar.projectKey=your_project_key \
             -Dsonar.sources=. \
-            -Dsonar.host.url=http://<your_sonarqube_host>:<your_sonarqube_port> \
+            -Dsonar.host.url=http://your_actual_sonarqube_host:9000 \
             -Dsonar.login=$SONAR_TOKEN
