@@ -4,82 +4,34 @@ package com.devops.tony_api.model;
  * Represents a video model with attributes such as video ID, title, and description.
  */
 public class VideoModel {
-    // Unique identifier for the video
-    private String videoId;
-    
-    // Title of the video
-    private String title;
-    
-    // Description of the video
-    private String description;
+    // URL of the video
+    private String url;
 
     /**
-     * Constructs a VideoModel with the specified video ID, title, and description.
+     * Constructs a VideoModel with the specified video URL.
      *
-     * @param videoId    the unique identifier for the video
-     * @param title      the title of the video
-     * @param description the description of the video
+     * @param url the URL of the video
      */
-    public VideoModel(String videoId, String title, String description) {
-        this.videoId = videoId;
-        this.title = title;
-        this.description = description;
-    }
-
-    // Getters and Setters
-
-    /**
-     * Returns the video ID.
-     *
-     * @return the video ID
-     */
-    public String getVideoId(){
-        return videoId;
+    public VideoModel(String url) {
+        this.url = url;
     }
 
     /**
-     * Sets the video ID.
+     * Returns the video URL.
      *
-     * @param videoId the unique identifier for the video
+     * @return the video URL
      */
-    public void setVideoId(String videoId){
-        this.videoId = videoId;
+    public String getUrl() {
+        return url;
     }
 
     /**
-     * Returns the title of the video.
+     * Sets the video URL.
      *
-     * @return the title of the video
+     * @param url the video URL
      */
-    public String getTitle(){
-        return title;
-    }
-
-    /**
-     * Sets the title of the video.
-     *
-     * @param title the title of the video
-     */
-    public void setTitle(String title){
-        this.title = title;
-    }
-    
-    /**
-     * Returns the description of the video.
-     *
-     * @return the description of the video
-     */
-    public String getDescription(){
-        return description;
-    }
-
-    /**
-     * Sets the description of the video.
-     *
-     * @param description the description of the video
-     */
-    public void setDescription(String description){
-        this.description = description;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
 

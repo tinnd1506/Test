@@ -10,12 +10,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class TonyService {
 
+    private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v=";
+
     /**
      * Retrieves a VideoModel object representing Tony's video.
      *
-     * @return VideoModel containing the video ID, title, and description.
+     * @return VideoModel containing the full video URL.
      */
     public VideoModel getTonyVideo() {
-        return new VideoModel("aAkMkVFwAoo", "Tony's Song", "A fun song by Tony.");
+        String videoId = "aAkMkVFwAoo";
+        String videoUrl = YOUTUBE_BASE_URL + videoId;
+        return new VideoModel(videoUrl);
     }
 } 
