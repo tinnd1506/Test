@@ -26,32 +26,6 @@ jobs:
       - name: Build with Maven
         run: ./mvnw package
 
-      - name: Generate Semantic Version
-        id: semantic_version
-        run: |
-          CURRENT_VERSION=$(git describe --tags --abbrev=0 || echo "0.0.0")
-          COMMIT_MESSAGES=$(git log --pretty=format:%s $CURRENT_VERSION..HEAD)
-          
-          # Increment version based on commit messages
-          if echo "$COMMIT_MESSAGES" | grep -q "BREAKING CHANGE"; then
-            # Increment major version and reset minor/patch
-            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. -v OFS=. '{$1++; $2=0; $3=0; print }')
-          elif echo "$COMMIT_MESSAGES" | grep -q "^feat"; then
-            # Increment minor version and reset patch
-            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. -v OFS=. '{$2++; $3=0; print }')
-          elif echo "$COMMIT_MESSAGES" | grep -q "^fix"; then
-            # Increment patch version
-            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. -v OFS=. '{$3++; print }')
-          else
-            # No change, keep the same version
-            NEW_VERSION=$CURRENT_VERSION
-          fi
-
-          # Pre-release handling (optional, could be added if needed)
-          COMMIT_COUNT=$(git rev-list --count HEAD)
-          echo "NEW_VERSION=$NEW_VERSION-$COMMIT_COUNT" >> $GITHUB_ENV
-          echo "Semantic version generated: $NEW_VERSION"
-
       - name: Build and Push Docker Image to GHCR
         env:
           REGISTRY: ghcr.io
@@ -72,28 +46,3 @@ jobs:
         run: |
           git tag ${{ env.NEW_VERSION }}
           git push origin ${{ env.NEW_VERSION }}
-
-  sonarlint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-          distribution: 'adopt'
-
-      - name: Run SonarQube Analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          docker run --rm \
-            -e SONAR_TOKEN=$SONAR_TOKEN \
-            -v $(pwd):/usr/src \
-            sonarsource/sonar-scanner-cli \
-            -Dsonar.projectKey=tony-api \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=http://your-public-sonarqube-url:9000 \
-            -Dsonar.login=$SONAR_TOKEN
