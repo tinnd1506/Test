@@ -95,5 +95,5 @@ jobs:
             sonarsource/sonar-scanner-cli \
             -Dsonar.projectKey=tony-api \
             -Dsonar.sources=. \
-            -Dsonar.host.url=http://localhost:9000/ \
+            -Dsonar.host.url=http://your-public-sonarqube-url:9000 \
             -Dsonar.login=$SONAR_TOKEN
