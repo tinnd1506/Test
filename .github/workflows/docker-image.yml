@@ -85,6 +85,15 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Run SonarLint
+      - name: Run SonarQube Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ./mvnw sonar:sonar
+          docker run --rm \
+            -e SONAR_TOKEN=$SONAR_TOKEN \
+            -v $(pwd):/usr/src \
+            sonarsource/sonar-scanner-cli \
+            -Dsonar.projectKey=your_project_key \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=http://<your_sonarqube_host>:<your_sonarqube_port> \
+            -Dsonar.login=$SONAR_TOKEN
