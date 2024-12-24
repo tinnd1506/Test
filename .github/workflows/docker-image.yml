@@ -3,6 +3,8 @@ name: Push Docker Image
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build-and-push:
@@ -24,10 +26,31 @@ jobs:
       - name: Build with Maven
         run: ./mvnw package
 
-      - name: Debug Image Name and Version
+      - name: Generate Semantic Version
+        id: semantic_version
         run: |
-          echo "Image Name: $IMAGE_NAME"
-          echo "Semantic Version: $SEMANTIC_VERSION"
+          CURRENT_VERSION=$(git describe --tags --abbrev=0 || echo "0.0.0")
+          COMMIT_MESSAGES=$(git log --pretty=format:%s $CURRENT_VERSION..HEAD)
+          
+          # Increment version based on commit messages
+          if echo "$COMMIT_MESSAGES" | grep -q "BREAKING CHANGE"; then
+            # Increment major version and reset minor/patch
+            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. -v OFS=. '{$1++; $2=0; $3=0; print }')
+          elif echo "$COMMIT_MESSAGES" | grep -q "^feat"; then
+            # Increment minor version and reset patch
+            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. -v OFS=. '{$2++; $3=0; print }')
+          elif echo "$COMMIT_MESSAGES" | grep -q "^fix"; then
+            # Increment patch version
+            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. -v OFS=. '{$3++; print }')
+          else
+            # No change, keep the same version
+            NEW_VERSION=$CURRENT_VERSION
+          fi
+
+          # Pre-release handling (optional, could be added if needed)
+          COMMIT_COUNT=$(git rev-list --count HEAD)
+          echo "NEW_VERSION=$NEW_VERSION-$COMMIT_COUNT" >> $GITHUB_ENV
+          echo "Semantic version generated: $NEW_VERSION"
 
       - name: Build and Push Docker Image to GHCR
         env:
