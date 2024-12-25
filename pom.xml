@@ -19,7 +19,7 @@
 
     <properties>
         <java.version>17</java.version> <!-- Ensure you're using Java 17 -->
-        <server.port>8081</server.port>
+        <server.port>3050</server.port>
     </properties>
 
     <dependencies>

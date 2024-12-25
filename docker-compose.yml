@@ -1,0 +1,17 @@
+services:
+  tony-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3050:3050"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    volumes:
+      - ./target:/app/target
+    networks:
+      - tony-network
+
+networks:
+  tony-network:
+    driver: bridge 
