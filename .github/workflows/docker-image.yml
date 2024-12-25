@@ -3,6 +3,8 @@ name: Push Docker Image
 on:
   push:
     branches: [main]
+    tags:
+      - 'v*'
 
 jobs:
   build-and-push:
@@ -13,35 +15,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Docker meta
+      - name: Docker Metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ github.repository }}
+            ghcr.io/${{ github.repository }}
           tags: |
             type=ref,event=branch
-            type=ref,event=pr
+            type=ref,event=tag
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
 
-      - name: Build and Push Docker Image to GHCR
+      - name: Login to GitHub Container Registry
         env:
-          REGISTRY: ghcr.io
-          IMAGE_NAME: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SEMANTIC_VERSION: ${{ steps.meta.outputs.tags }}
         run: |
-          IMAGE_NAME=$(echo $IMAGE_NAME | tr '[:upper:]' '[:lower:]')
-          docker build -t $REGISTRY/$IMAGE_NAME:$SEMANTIC_VERSION .
-          docker build -t $REGISTRY/$IMAGE_NAME:latest .
-          echo $GITHUB_TOKEN | docker login $REGISTRY -u ${{ github.actor }} --password-stdin
-          docker push $REGISTRY/$IMAGE_NAME:$SEMANTIC_VERSION
-          docker push $REGISTRY/$IMAGE_NAME:latest
+          echo $GITHUB_TOKEN | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Push Git Tag for Semantic Version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git tag ${{ steps.meta.outputs.tags }}
-          git push origin ${{ steps.meta.outputs.tags }}
+      - name: Build and Push Docker Image to GHCR
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
