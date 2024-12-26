@@ -1,7 +1,7 @@
 FROM openjdk:17
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /tony-api
 
 # Copy the JAR file into the container
 ARG JAR_FILE=target/*.jar
