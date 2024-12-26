@@ -2,7 +2,7 @@ name: Push Docker Image
 
 on:
   push:
-    branches: [main]
+    branches: [feature/test-sonarqube]
     tags:
       - 'v*'
 
